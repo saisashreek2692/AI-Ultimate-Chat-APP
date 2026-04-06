@@ -1,0 +1,72 @@
+/* ── SECTION TITLES ── */
+.section {
+  padding: 64px 32px;
+}
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.section-title {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 10px;
+}
+.section-sub {
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 300;
+  max-width: 500px;
+  margin-bottom: 48px;
+}
+
+/* ── ARCHITECTURE ── */
+.arch-section {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 32px;
+}
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.arch-layer {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  transition: all 0.2s;
+  cursor: default;
+}
+.arch-layer:hover {
+  border-color: var(--border2);
+  transform: translateY(-2px);
+}
+.arch-layer-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.arch-tech {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tech-badge {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--muted);
+  text-align: center;
+}

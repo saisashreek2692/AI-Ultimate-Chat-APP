@@ -1,0 +1,33 @@
+/* Google Font Import */
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap");
+
+/* Global Variables */
+:root {
+  --bg: #06070a;
+  --surface: #0d0f14;
+  --surface2: #13151c;
+  --border: rgba(255, 255, 255, 0.07);
+  --border2: rgba(255, 255, 255, 0.12);
+  --text: #e8eaf0;
+  --muted: #6b7080;
+  --accent: #5b6ef5;
+  --accent2: #8b5cf6;
+  --glow: rgba(91, 110, 245, 0.15);
+}
+
+/* Global Margins */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
