@@ -21,7 +21,7 @@ export const modules = [
     icon: "💻",
     title: "Developer Hub",
     color: "#22D3A5",
-    phase: "Phase 1",
+    phase: "Phase 2",
     phaseColor: "rgba(34,211,165,0.12)",
     phaseText: "#22D3A5",
     desc: "Code generation, debugging, repo integration, and auto documentation in one IDE-like environment.",
