@@ -115,3 +115,21 @@
   border-color: rgba(255, 255, 255, 0.25);
   background: var(--surface2);
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero {
+    padding: 60px 20px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 8vw, 48px);
+  }
+  .hero-ctas {
+    flex-direction: column;
+    align-items: center;
+  }
+  .btn-primary, .btn-ghost {
+    width: 100%;
+    max-width: 280px;
+  }
+}

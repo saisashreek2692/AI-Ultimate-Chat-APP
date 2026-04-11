@@ -2,14 +2,13 @@
 .nav {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 16px 32px;
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(6, 7, 10, 0.85);
+  background: rgba(8, 10, 16, 0.85);
 }
 .logo {
   font-family: "Syne", sans-serif;
@@ -19,6 +18,8 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.5px;
+  position: absolute;
+  left: 32px;
 }
 .nav-badge {
   font-size: 10px;
@@ -34,6 +35,9 @@
 .nav-links {
   display: flex;
   gap: 6px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .nav-links button {
   background: none;
@@ -53,4 +57,18 @@
 }
 .nav-links button.active {
   color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav {
+    padding: 16px 20px;
+  }
+  .nav-links {
+    display: none; /* Hide on mobile, perhaps add hamburger later */
+  }
+  .logo {
+    font-size: 18px;
+    left: 20px;
+  }
 }

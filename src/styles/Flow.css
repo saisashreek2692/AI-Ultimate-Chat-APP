@@ -67,3 +67,20 @@
   margin: 4px;
   font-size: 12px;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .section {
+    padding: 48px 20px;
+  }
+  .flow-demo {
+    padding: 20px;
+  }
+  .flow-steps {
+    justify-content: center;
+  }
+  .flow-step {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}

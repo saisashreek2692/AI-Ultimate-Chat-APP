@@ -1,6 +1,13 @@
 import "./Nav.css";
+import { useNavigate } from "react-router"
 
 export default function Nav({ setSection, activeSection }) {
+  const navigate = useNavigate();
+
+  const handleFeaturesUnlock = () => {
+    navigate("/auth");
+  }
+
   return (
     <>
       {/* NAV Block */}
@@ -25,7 +32,7 @@ export default function Nav({ setSection, activeSection }) {
             </button>
           ))}
         </div>
-        <div className="nav-badge">Private Beta</div>
+        <div className="nav-badge" onClick={handleFeaturesUnlock}>Unlock Features</div>
       </nav>
     </>
   );

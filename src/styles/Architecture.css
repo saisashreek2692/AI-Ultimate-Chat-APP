@@ -70,3 +70,24 @@
   color: var(--muted);
   text-align: center;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .arch-section {
+    padding: 24px;
+  }
+  .arch-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .arch-layer {
+    padding: 16px;
+  }
+  .arch-layer-label {
+    font-size: 9px;
+  }
+  .tech-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}

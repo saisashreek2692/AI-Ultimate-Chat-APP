@@ -93,3 +93,31 @@
   color: var(--muted);
   line-height: 1.8;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .roadmap {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .roadmap::before {
+    display: none;
+  }
+  .phase-card {
+    padding: 0;
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .phase-dot {
+    flex-shrink: 0;
+    margin: 0;
+  }
+  .phase-name {
+    margin-bottom: 4px;
+  }
+  .phase-items {
+    font-size: 11px;
+  }
+}

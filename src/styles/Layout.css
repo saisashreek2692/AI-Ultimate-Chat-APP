@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+:root {
+  --bg: #080a10;
+  --bg2: #0c0f18;
+  --surface: #111520;
+  --surface2: #161b29;
+  --surface3: #1c2235;
+  --border: rgba(255, 255, 255, 0.06);
+  --border2: rgba(255, 255, 255, 0.1);
+  --border3: rgba(255, 255, 255, 0.18);
+  --text: #e2e6f0;
+  --text2: #8b92a8;
+  --text3: #545b72;
+  --blue: #4f7ffa;
+  --blue2: #3d6fe8;
+  --violet: #7c5cfc;
+  --cyan: #22d4c8;
+  --amber: #f59e0b;
+  --green: #10b981;
+  --red: #ef4444;
+  --sidebar-w: 220px;
+  --topbar-h: 52px;
+  --bnav-h: 64px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Instrument Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border3);
+  border-radius: 2px;
+}

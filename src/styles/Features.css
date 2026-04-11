@@ -69,3 +69,24 @@
   color: var(--muted);
   line-height: 1.5;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .features-strip {
+    gap: 12px;
+  }
+  .kf-card {
+    flex: 0 0 200px;
+    padding: 16px;
+  }
+  .kf-icon {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .kf-title {
+    font-size: 13px;
+  }
+  .kf-desc {
+    font-size: 11px;
+  }
+}
