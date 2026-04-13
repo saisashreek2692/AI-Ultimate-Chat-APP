@@ -3,6 +3,7 @@ import Landing from "./Landing";
 import Auth from "./components/Auth/Auth";
 import DashboardLayout from "./Layout/DashboardLayout";
 import Dashboard from "./Pages/Dashboard";
+import MainLayout from "./Layout/MainLayout";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,12 @@ const router = createBrowserRouter([
       <DashboardLayout>
         <Dashboard />
       </DashboardLayout>
+    )
+  },
+  {
+    path: "/main",
+    element: (
+      <MainLayout></MainLayout>
     )
   }
 ]);
