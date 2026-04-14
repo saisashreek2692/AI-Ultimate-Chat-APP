@@ -298,9 +298,9 @@ function Navbar({ scrolled, onNav }) {
         ))}
       </div>
       <div className="lp-nav-spacer" />
-      {/* <div className="lp-nav-actions">
+      <div className="lp-nav-actions">
         {user ? (
-          <button className="lp-btn-cta" onClick={() => navigate("/brain")}>
+          <button className="lp-btn-cta" onClick={() => navigate("/main/brain")}>
             Open App →
           </button>
         ) : (
@@ -313,7 +313,7 @@ function Navbar({ scrolled, onNav }) {
             </Link>
           </>
         )}
-      </div> */}
+      </div>
     </nav>
   );
 }
@@ -817,7 +817,7 @@ export default function Landing() {
   // Activate scroll-reveal
   useReveal();
 
-  const onStart = () => navigate(user ? "/brain" : "/login");
+  const onStart = () => navigate(user ? "/brain" : "/auth");
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);

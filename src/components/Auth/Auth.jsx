@@ -34,7 +34,7 @@ export default function Auth() {
           }),
         );
       }
-      navigate("/brain");
+      navigate("/main/brain");
     } catch (e) {
       setError(e.message);
     } finally {

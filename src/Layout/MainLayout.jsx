@@ -1,63 +1,142 @@
-import React from "react";
-import "../styles/Auth.css";
-import Sidebar from "../components/common/Sidebar";
+import React, { useEffect } from "react";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSidebar, closeSidebar } from "../store/slices/uiSlice";
+import { logout } from "../store/slices/authSlice";
+import { ToastContainer } from "../components/ui";
+
+import "../index.css"
+// import Sidebar from "../components/common/Sidebar";
+
+const NAV = [
+  { path: "/main/brain", icon: "🧠", label: "AI Brain", badge: "p1b", bt: "P1" },
+  { path: "/main/dev", icon: "💻", label: "Dev Hub", badge: "p1b", bt: "P1" },
+  { path: "/main/writing", icon: "📝", label: "Writing", badge: "p1b", bt: "P1" },
+  {
+    path: "/main/office",
+    icon: "📊",
+    label: "Smart Office",
+    badge: "p1b",
+    bt: "P1",
+  },
+  { path: "/main/meetings", icon: "📅", label: "Meetings", badge: "p2b", bt: "P2" },
+  { path: "/main/workflow", icon: "🔄", label: "Workflows", badge: "p2b", bt: "P2" },
+];
 
 export default function MainLayout() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const user = useSelector((s) => s.auth.user);
+  const { sidebarOpen } = useSelector((s) => s.ui);
+
+  const current = NAV.find((n) => location.pathname.startsWith(n.path));
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") dispatch(closeSidebar());
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [dispatch]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
   return (
     <>
       <div className="app">
-        <div className="topbar">
-          <button className="hamburger">Menu</button>
+        {/* TOPBAR */}
+        <header className="topbar">
+          <button
+            className="hamburger"
+            onClick={() => dispatch(toggleSidebar())}
+          >
+            {sidebarOpen ? "✕" : "☰"}
+          </button>
           <div className="topbar-logo">AIPP</div>
-          <div className="topbar-mod">🧠 AI Brain</div>
-          <div className="topbar-spacer"></div>
+          <div className="topbar-mod">
+            {current?.icon} {current?.label}
+          </div>
+          <div className="topbar-spacer" />
           <div className="user-pill">
-            <div className="user-avatar">DU</div>
-            <span className="user-name">John Doe</span>
+            <div className="user-avatar">{user?.initials}</div>
+            <span className="user-name">{user?.name?.split(" ")[0]}</span>
           </div>
-          <button className="btn-logout">Logout</button>
-        </div>
+          <button className="btn-logout" onClick={handleLogout}>
+            Sign Out
+          </button>
+        </header>
+
         <div className="main-layout">
-          <Sidebar />
-          <div className="content">
-            <div className="module-header" style={{ paddingBottom: "6px" }}>
-              <div className="module-title-row">
-                <div
-                  className="module-icon"
-                  style={{
-                    background: "rgba(79,127,250,0.1)",
-                    borderColor: "rgba(79,127,250,0.2)",
-                  }}
-                >
-                  🧠
-                </div>
-                <div>
-                  <div className="module-title">AI Brain</div>
-                  <div className="module-sub">Central Intelligence Engine</div>
-                </div>
-              </div>
-              <button className="btn btn-secondary btn-sm">Clear</button>
-            </div>
-            <div className="quick-row">
-              <div className="qchip">✍️ Draft Proposal</div>
-              <div className="qchip">🐛 Debug Code</div>
-              <div className="qchip">📋 Summarize Doc</div>
-              <div className="qchip">📧 Write Email</div>
-              <div className="qchip">🎯 Plan Sprint</div>
-              <div className="qchip">🔄 Create Workflow</div>
-            </div>
-            <div className="chat-msgs"></div>
-            <div className="empty-state">
-              <div className="empty-icon">🧠</div>
-              <div className="empty-title">Welcome to AIPP Brain</div>
-              <div className="empty-sub">Context-aware AI assistant. Ask anything or tap a quick prompt.</div>
-            </div>
-            <div className="chat-input-row">
-              <input className="chat-input" id="cinput" placeholder="Ask AIPP Brain Anything....." autoComplete="off" />
-              <button className="btn btn-primary" id="cbtn">Send</button>
-            </div>
-          </div>
+          {/* OVERLAY */}
+          <div
+            className={`sidebar-overlay ${sidebarOpen ? "visible" : ""}`}
+            onClick={() => dispatch(closeSidebar())}
+          />
+
+          {/* SIDEBAR */}
+          <nav className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+            <div className="sidebar-section-label">Phase 1 — Foundation</div>
+            {NAV.slice(0, 4).map((n) => (
+              <NavLink
+                key={n.path}
+                to={n.path}
+                className={({ isActive }) =>
+                  `nav-item ${isActive ? "active" : ""}`
+                }
+                onClick={() => dispatch(closeSidebar())}
+              >
+                <span className="nav-icon">{n.icon}</span>
+                <span className="nav-label">{n.label}</span>
+                <span className={`nav-badge ${n.badge}`}>{n.bt}</span>
+              </NavLink>
+            ))}
+            <div className="sidebar-section-label">Phase 2 — Automation</div>
+            {NAV.slice(4).map((n) => (
+              <NavLink
+                key={n.path}
+                to={n.path}
+                className={({ isActive }) =>
+                  `nav-item ${isActive ? "active" : ""}`
+                }
+                onClick={() => dispatch(closeSidebar())}
+              >
+                <span className="nav-icon">{n.icon}</span>
+                <span className="nav-label">{n.label}</span>
+                <span className={`nav-badge ${n.badge}`}>{n.bt}</span>
+              </NavLink>
+            ))}
+          </nav>
+
+          {/* CONTENT */}
+          <main className="content">
+            <Outlet />
+          </main>
         </div>
+
+        {/* BOTTOM NAV */}
+        <nav className="bottom-nav">
+          <div className="bnav-inner">
+            {NAV.map((n) => {
+              const active = location.pathname.startsWith(n.path);
+              return (
+                <button
+                  key={n.path}
+                  className={`bnav-btn ${active ? "active" : ""}`}
+                  onClick={() => navigate(n.path)}
+                >
+                  <span className="bnav-icon">{n.icon}</span>
+                  <span className="bnav-label">{n.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+
+        <ToastContainer />
       </div>
     </>
   );
