@@ -440,7 +440,10 @@ function Navbar({ scrolled, onNav }) {
       <div className="lp-nav-spacer" />
       <div className="lp-nav-actions">
         {user ? (
-          <button className="lp-btn-cta" onClick={() => navigate("/main/brain")}>
+          <button
+            className="lp-btn-cta"
+            onClick={() => navigate("/main/brain")}
+          >
             Open App →
           </button>
         ) : (
@@ -1083,6 +1086,7 @@ function CTASection({ onStart }) {
 }
 
 function Footer({ onNav }) {
+  const currentYear = new Date().getFullYear();
   return (
     <footer className="lp-footer">
       <div className="lp-footer-inner">
@@ -1112,7 +1116,9 @@ function Footer({ onNav }) {
             Sign In
           </Link>
         </div>
-        <div className="lp-footer-copy">© 2025 AIPP. All rights reserved.</div>
+        <div className="lp-footer-copy">
+          © {currentYear} AIPP. All rights reserved.
+        </div>
       </div>
     </footer>
   );
