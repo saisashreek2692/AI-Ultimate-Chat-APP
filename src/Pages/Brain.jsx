@@ -5,7 +5,7 @@ import {
   sendMessage,
   clearHistory,
   addUserMessage,
-} from "../store/slices/bainSlice";
+} from "../store/slices/brainSlice";
 import { Spinner, EmptyState } from "../components/ui";
 import { formatMessage } from "../lib/api";
 

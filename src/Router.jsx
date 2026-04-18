@@ -4,9 +4,16 @@ import Auth from "./components/Auth/Auth";
 import DashboardLayout from "./Layout/DashboardLayout";
 import Dashboard from "./Pages/Dashboard";
 import MainLayout from "./Layout/MainLayout";
-import { Brain, Dev, Writing, Office, Meetings, Workflow } from "./Pages/index";
+import { Brain, Dev, Writing, Office, Meetings, Workflow, Agents, Billing, Profile } from "./Pages/index";
 
 import { store } from "./store";
+import { hydrateBilling } from "./store/slices/billingSlice";
+
+// ── Session restore: hydrate billing if user was already logged in ──
+const existingUser = store.getState().auth.user;
+if (existingUser?.email) {
+  store.dispatch(hydrateBilling(existingUser.email));
+}
 
 //redirect user to /main if not authenticated
 const requireAuth = () => {
@@ -47,6 +54,10 @@ const router = createBrowserRouter([
       { path: "office", loaders: requireAuth, element: <Office /> },
       { path: "meetings", loaders: requireAuth, element: <Meetings /> },
       { path: "workflow", loaders: requireAuth, element: <Workflow /> },
+      { path: "agents", loaders: requireAuth, element: <Agents /> },
+      { path: "billing", loaders: requireAuth, element: <Billing /> },
+      { path: "profile", loaders: requireAuth, element: <Profile /> },
+
     ],
   },
 

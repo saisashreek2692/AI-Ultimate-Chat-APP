@@ -6,7 +6,7 @@ import {
   clearWorkflow,
   enhanceWorkflow,
 } from "../store/slices/moduleSlice";
-import { addUserMessage } from "../store/slices/bainSlice";
+import { addUserMessage } from "../store/slices/brainSlice";
 import { showToast } from "../store/slices/uiSlice";
 import { Spinner, EmptyState } from "../components/ui";
 

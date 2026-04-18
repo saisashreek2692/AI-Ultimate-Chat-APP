@@ -1,35 +1,72 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { callClaude } from "../../lib/api";
+import { deductCredits, selectAgent, canUseAI } from "./billingSlice";
 
-const TYPE_MAP = {
-  blog: "a blog post",
-  email: "an email",
-  resume: "a resume section",
-  social: "a social media post",
-  report: "a professional report",
-  creative: "creative writing",
+const TYPE_SYSTEM = {
+  blog: "Expert blog writer. Write engaging, well-structured blog posts with markdown headings.",
+  email: "Expert business email writer. Write clear, professional emails.",
+  resume:
+    "Professional resume writer. ATS-friendly, strong action verbs, quantifiable achievements.",
+  social:
+    "Social media expert. Engaging, platform-optimized posts. Include hashtag suggestions.",
+  report:
+    "Business analyst. Clear, structured reports with executive summary and recommendations.",
+  creative:
+    "Creative writing expert. Vivid, imaginative content with compelling narrative.",
 };
-const IMPROVE_MAP = {
-  grammar: "Fix all grammar errors, preserving style.",
-  tone: "Improve tone to be more professional and engaging.",
-  expand: "Expand with more detail, aim to double length.",
-  shorten: "Shorten to key points at half the length.",
+const TYPE_LABEL = {
+  blog: "blog post",
+  email: "email",
+  resume: "resume section",
+  social: "social media post",
+  report: "professional report",
+  creative: "creative piece",
+};
+const IMPROVE = {
+  grammar:
+    "Fix all grammar, spelling, punctuation. Preserve style. Return only corrected text.",
+  tone: "Improve to be more professional, engaging, persuasive. Same content. Return only improved text.",
+  expand:
+    "Expand significantly — more detail, examples, depth. Double the length. Return only expanded text.",
+  shorten:
+    "Condense to essential points. Remove redundancy. Half the length. Return only shortened text.",
+};
+
+const creditGuard = (state) => {
+  if (!canUseAI(state))
+    return state.billing.cooldownUntil ? "COOLDOWN" : "NO_CREDITS";
+  return null;
 };
 
 export const generateContent = createAsyncThunk(
   "writing/generate",
-  async ({ prompt, type }, { rejectWithValue }) => {
+  async ({ prompt, type }, { getState, dispatch, rejectWithValue }) => {
+    const state = getState();
+    const err = creditGuard(state);
+    if (err) return rejectWithValue(err);
+    const agent = selectAgent(state);
+    const user = state.auth.user;
     try {
-      return await callClaude(
+      const r = await callClaude(
         [
           {
             role: "user",
-            content: `Write ${TYPE_MAP[type] || "content"} about: "${prompt}". Make it professional and engaging.`,
+            content: `Write a ${TYPE_LABEL[type] || "piece"} about: "${prompt}". Make it engaging and well-structured.`,
           },
         ],
-        "You are an expert content writer. Produce high-quality content with proper markdown.",
-        1200,
+        TYPE_SYSTEM[type] || TYPE_SYSTEM.blog,
+        1500,
+        agent.id,
       );
+      dispatch(
+        deductCredits({
+          email: user.email,
+          amount: agent.creditCost,
+          agent: agent.id,
+          module: "writing",
+        }),
+      );
+      return r;
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -38,13 +75,28 @@ export const generateContent = createAsyncThunk(
 
 export const improveContent = createAsyncThunk(
   "writing/improve",
-  async ({ action, text }, { rejectWithValue }) => {
+  async ({ action, text }, { getState, dispatch, rejectWithValue }) => {
+    const state = getState();
+    const err = creditGuard(state);
+    if (err) return rejectWithValue(err);
+    const agent = selectAgent(state);
+    const user = state.auth.user;
     try {
-      return await callClaude(
-        [{ role: "user", content: `${IMPROVE_MAP[action]}\n\nText:\n${text}` }],
-        "You are a professional editor. Return only the improved text.",
-        1200,
+      const r = await callClaude(
+        [{ role: "user", content: `${IMPROVE[action]}\n\n---\n${text}\n---` }],
+        "World-class editor. Follow instruction exactly, return only resulting text.",
+        1500,
+        agent.id,
       );
+      dispatch(
+        deductCredits({
+          email: user.email,
+          amount: agent.creditCost,
+          agent: agent.id,
+          module: "writing",
+        }),
+      );
+      return r;
     } catch (e) {
       return rejectWithValue(e.message);
     }
@@ -53,7 +105,13 @@ export const improveContent = createAsyncThunk(
 
 const writingSlice = createSlice({
   name: "writing",
-  initialState: { content: "", type: "blog", prompt: "", loading: false },
+  initialState: {
+    content: "",
+    type: "blog",
+    prompt: "",
+    loading: false,
+    error: null,
+  },
   reducers: {
     setContent(state, { payload }) {
       state.content = payload;
@@ -67,33 +125,36 @@ const writingSlice = createSlice({
     clearContent(state) {
       state.content = "";
       state.prompt = "";
+      state.error = null;
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(generateContent.pending, (state) => {
-        state.loading = true;
+  extraReducers: (b) => {
+    b.addCase(generateContent.pending, (s) => {
+      s.loading = true;
+      s.error = null;
+    })
+      .addCase(generateContent.fulfilled, (s, { payload }) => {
+        s.loading = false;
+        s.content = payload;
       })
-      .addCase(generateContent.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        state.content = payload;
+      .addCase(generateContent.rejected, (s, { payload }) => {
+        s.loading = false;
+        s.error = payload;
       })
-      .addCase(generateContent.rejected, (state) => {
-        state.loading = false;
+      .addCase(improveContent.pending, (s) => {
+        s.loading = true;
+        s.error = null;
       })
-      .addCase(improveContent.pending, (state) => {
-        state.loading = true;
+      .addCase(improveContent.fulfilled, (s, { payload }) => {
+        s.loading = false;
+        s.content = payload;
       })
-      .addCase(improveContent.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        state.content = payload;
-      })
-      .addCase(improveContent.rejected, (state) => {
-        state.loading = false;
+      .addCase(improveContent.rejected, (s, { payload }) => {
+        s.loading = false;
+        s.error = payload;
       });
   },
 });
-
 export const { setContent, setType, setPrompt, clearContent } =
   writingSlice.actions;
 export default writingSlice.reducer;
